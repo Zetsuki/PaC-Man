@@ -1,7 +1,0 @@
-{
-    "files.associations": {
-        "sdl.h": "c",
-        "maze.h": "c",
-        "stdio.h": "c"
-    }
-}
