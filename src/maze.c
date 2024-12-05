@@ -60,18 +60,12 @@ void display_window(const char* title, int width, int height) {
     for (int i = 0; i < 4; ++i) {
         if (!textures[i]) {
             printf("Error loading texture %d: %s\n", i, IMG_GetError());
+            SDL_DestroyRenderer(renderer);
+            SDL_DestroyWindow(window);
+            IMG_Quit();
+            SDL_Quit();
+            return;
         }
-    }
-
-    // texture loading
-    SDL_Texture* texture = IMG_LoadTexture(renderer, "assets/corner.png");
-    if (!texture) {
-        printf("error loading texture: %s\n", IMG_GetError());
-        SDL_DestroyRenderer(renderer);
-        SDL_DestroyWindow(window);
-        IMG_Quit();
-        SDL_Quit();
-        return;
     }
 
     // main loop 
@@ -92,7 +86,7 @@ void display_window(const char* title, int width, int height) {
         // iterate through array, to render all textures
         for (int row = 0; row < ROWS; ++row) {
             for (int col = 0; col < COLS; ++col) {
-                SDL_Rect destRect = { col * 32, row * 32, 32, 32 };
+                SDL_Rect destRect = { col * 32, row * 32, 32, 32 }; //x, y, width, height
                 SDL_RenderCopy(renderer, textures[maze[row][col]], NULL, &destRect);
             }
         }
@@ -107,7 +101,6 @@ void display_window(const char* title, int width, int height) {
     for (int i = 0; i < 4; ++i) {
         SDL_DestroyTexture(textures[i]);
     }
-    SDL_DestroyTexture(texture);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     IMG_Quit();
