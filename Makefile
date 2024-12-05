@@ -1,7 +1,7 @@
 # compiler and flags
 CC = gcc
 CFLAGS = -Wall $(shell sdl2-config --cflags) 
-LDFLAGS = $(shell sdl2-config --libs)
+LDFLAGS = $(shell sdl2-config --libs) -lSDL2_image
 
 # directories
 SRCDIR = src
