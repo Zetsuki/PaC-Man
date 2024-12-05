@@ -21,6 +21,8 @@ CellType maze[ROWS][COLS] =
     {WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL}
 };
 
+SDL_Texture *textures[4];
+
 void display_window(const char* title, int width, int height) {
     // sdl init
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -50,6 +52,17 @@ void display_window(const char* title, int width, int height) {
         return;
     }
 
+    textures[WALL] = IMG_LoadTexture(renderer, "assets/middle_wall.png");
+    textures[POINT] = IMG_LoadTexture(renderer, "assets/point.png");
+    textures[POWERUP] = IMG_LoadTexture(renderer, "assets/powerup.png");
+    textures[EMPTY] = IMG_LoadTexture(renderer, "assets/empty.png");
+
+    for (int i = 0; i < 4; ++i) {
+        if (!textures[i]) {
+            printf("Error loading texture %d: %s\n", i, IMG_GetError());
+        }
+    }
+
     // texture loading
     SDL_Texture* texture = IMG_LoadTexture(renderer, "assets/corner.png");
     if (!texture) {
@@ -75,12 +88,14 @@ void display_window(const char* title, int width, int height) {
         // background
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
-
-        // texture pos
-        SDL_Rect destRect = { 200, 150, 240, 180 }; // x, y, width, height
-
-        // draw texture
-        SDL_RenderCopy(renderer, texture, NULL, &destRect);
+        
+        // iterate through array, to render all textures
+        for (int row = 0; row < ROWS; ++row) {
+            for (int col = 0; col < COLS; ++col) {
+                SDL_Rect destRect = { col * 32, row * 32, 32, 32 };
+                SDL_RenderCopy(renderer, textures[maze[row][col]], NULL, &destRect);
+            }
+        }
 
         // rendering
         SDL_RenderPresent(renderer);
@@ -89,6 +104,9 @@ void display_window(const char* title, int width, int height) {
     }
 
     // resources cleaning
+    for (int i = 0; i < 4; ++i) {
+        SDL_DestroyTexture(textures[i]);
+    }
     SDL_DestroyTexture(texture);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
