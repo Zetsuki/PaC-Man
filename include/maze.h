@@ -3,7 +3,10 @@
 
 typedef enum {
     EMPTY, 
-    WALL, 
+    MIDDLE_WALL,
+    OUTER_WALL,
+    JUNCTION,
+    CORNER, 
     POINT,
     POWERUP
 } CellType;
