@@ -63,16 +63,16 @@ void need_rotation(bool* rota, int* deg, CellType maze[ROWS][COLS], int row, int
             }
             break;
         case JUNCTION:
-            // vertical and connects to the up, right and bottom by default, checking the three others possible connection
-            if (left && down && right) {
+            // horizontal and connects to the left, bottom and right by default, checking the three others possible connection
+            if (down && left && up) {
                 *rota = true;
                 *deg = 90;
             }
-            if (up && left && down) {
+            if (left && up && right) {
                 *rota = true;
                 *deg = 180;
             }
-            if (left && up && right) {
+            if (up && right && down) {
                 *rota = true;
                 *deg = 270;
             }
