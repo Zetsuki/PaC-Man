@@ -128,7 +128,23 @@ void render_pacman(SDL_Renderer* renderer, Pacman* pacman, int* width, int* heig
         tile_height * scale
     };
 
-    SDL_RenderCopy(renderer, pacman->texture, NULL, &destRect);
+    switch (pacman->dir) {
+        case UP:
+            SDL_RenderCopyEx(renderer, pacman->texture, NULL, &destRect, 270, NULL, SDL_FLIP_VERTICAL);
+            break;
+        case DOWN:
+            SDL_RenderCopyEx(renderer, pacman->texture, NULL, &destRect, 90, NULL, SDL_FLIP_VERTICAL);
+            break;
+        case LEFT:
+            SDL_RenderCopyEx(renderer, pacman->texture, NULL, &destRect, 180, NULL, SDL_FLIP_VERTICAL);
+            break;
+        case RIGHT:
+            SDL_RenderCopy(renderer, pacman->texture, NULL, &destRect);
+            break;
+        default:
+            SDL_RenderCopy(renderer, pacman->texture, NULL, &destRect);
+            break;
+    }
 }
 
 void cleanup_pacman(Pacman* pacman) {
