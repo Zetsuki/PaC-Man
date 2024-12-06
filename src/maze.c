@@ -33,7 +33,7 @@ void need_rotation(bool* rota, int* deg, CellType maze[ROWS][COLS], int row, int
     *rota = false;
     *deg = 0;
 
-    // adjacent cells, we avoir checking out of bounds cells
+    // adjacent cells, we avoid checking out of bounds cells
     bool up = (row > 0 && maze[row-1][col] != EMPTY && maze[row-1][col] != POINT && maze[row-1][col] != POWERUP);
     bool down = (row < ROWS-1 && maze[row+1][col] != EMPTY && maze[row+1][col] != POINT && maze[row+1][col] != POWERUP);;
     bool left = (col > 0 && maze[row][col-1] != EMPTY && maze[row][col-1] != POINT && maze[row][col-1] != POWERUP);;
@@ -97,7 +97,7 @@ void need_rotation(bool* rota, int* deg, CellType maze[ROWS][COLS], int row, int
     }
 };
 
-void display_window(const char* title, int width, int height) {
+void display_window(const char* title, int* width, int* height) {
     // sdl init
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         printf("SDL init error: %s\n", SDL_GetError());
@@ -108,8 +108,8 @@ void display_window(const char* title, int width, int height) {
     SDL_Window* window = SDL_CreateWindow(
         title, 
         SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 
-        width, height, 
-        SDL_WINDOW_SHOWN
+        *width, *height, 
+        SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
     );
     if (!window) {
         printf("error creation window: %s\n", SDL_GetError());
@@ -126,6 +126,7 @@ void display_window(const char* title, int width, int height) {
         return;
     }
 
+    // load textures for each maze element
     textures[EMPTY] = IMG_LoadTexture(renderer, "assets/empty.png");
     textures[MIDDLE_WALL] = IMG_LoadTexture(renderer, "assets/middle_wall.png");
     textures[OUTER_WALL] = IMG_LoadTexture(renderer, "assets/outer_wall.png");
@@ -134,7 +135,6 @@ void display_window(const char* title, int width, int height) {
     textures[POINT] = IMG_LoadTexture(renderer, "assets/point.png");
     textures[POWERUP] = IMG_LoadTexture(renderer, "assets/powerup.png");
     
-
     for (int i = 0; i < 7; ++i) {
         if (!textures[i]) {
             printf("Error loading texture %d: %s\n", i, IMG_GetError());
@@ -155,35 +155,58 @@ void display_window(const char* title, int width, int height) {
             if (event.type == SDL_QUIT) {
                 running = 0;
             }
+
+            // window resizing
+            if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
+                *width = event.window.data1;
+                *height = event.window.data2;
+            }
         }
         
         // background
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
         
-        int smoothed_maze = 0;
+        int smoothed_maze = 0; // to prevent unnecessary checks on already smoothed maze textures
         bool needs_rotation;
         int rotation_degrees;
+
+        // calculation of scale factor and offsets 
+        int tile_width = 32;
+        int tile_height = 32;
+
+        float scale_x = (float)*width / (COLS * tile_width);
+        float scale_y = (float)*height / (ROWS * tile_height);
+        float scale = scale_x < scale_y ? scale_x : scale_y; // aspect ratio
+        scale *= 0.8f; // 80%
+
+        int offset_x = (*width - (COLS * tile_width * scale)) / 2;
+        int offset_y = (*height - (ROWS * tile_height * scale)) / 2;
 
         // iterate through array, to render all textures
         for (int row = 0; row < ROWS; ++row) {
             for (int col = 0; col < COLS; ++col) {
-                // textures are not yet smoothed via rotation
+                SDL_Rect destRect = { 
+                    offset_x + col * tile_width * scale,    // x
+                    offset_y + row * tile_height * scale,   // y
+                    tile_width * scale,                     // width
+                    tile_height * scale,                    // height
+                };
+
+                // textures are not yet smoothed
                 if (smoothed_maze == 0) {
                     need_rotation(&needs_rotation, &rotation_degrees, maze, row, col);
 
                     if (needs_rotation) {
-                        SDL_Rect destRect = { col * 32, row * 32, 32, 32 }; //x, y, width, height
                         SDL_RenderCopyEx(renderer, textures[maze[row][col]], NULL, &destRect, rotation_degrees, NULL, SDL_FLIP_NONE);
                     }
                     else {
-                        SDL_Rect destRect = { col * 32, row * 32, 32, 32 };
                         SDL_RenderCopy(renderer, textures[maze[row][col]], NULL, &destRect);
                     }
                 }
                 // textures are already smoothed
                 else {
-                    SDL_Rect destRect = { col * 32, row * 32, 32, 32 };
+                    
                     SDL_RenderCopy(renderer, textures[maze[row][col]], NULL, &destRect);
                 } 
             }

@@ -11,6 +11,6 @@ typedef enum {
     POWERUP
 } CellType;
 
-void display_window(const char *title, int width, int height);
+void display_window(const char *title, int* width, int* height);
 
 #endif
