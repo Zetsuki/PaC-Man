@@ -110,30 +110,7 @@ void render_maze(SDL_Renderer* renderer, int* width, int* height) {
     }
 }
 
-void render_maze_to_texture(SDL_Renderer* renderer, int* width, int* height) {
-    if (maze_texture) {
-        SDL_DestroyTexture(maze_texture);
-    }
-    
-    maze_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, COLS * (*width), ROWS * (*height));
-    
-    if (!maze_texture) {
-        printf("Error creating maze texture: %s\n", SDL_GetError());
-        return;
-    }
-
-    SDL_SetRenderTarget(renderer, maze_texture);  
-    SDL_RenderClear(renderer);
-
-    render_maze(renderer, width, height);
-
-    SDL_SetRenderTarget(renderer, NULL); 
-}
-
 void cleanup_maze(SDL_Window* window, SDL_Renderer* renderer) {
-    if (maze_texture) {
-        SDL_DestroyTexture(maze_texture);
-    }
     for (int i = 0; i < 7; ++i) {
         SDL_DestroyTexture(maze_cell_textures[i]);
     }
