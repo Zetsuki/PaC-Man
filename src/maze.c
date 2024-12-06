@@ -48,10 +48,49 @@ void need_rotation(bool* rota, int* deg, CellType maze[ROWS][COLS], int row, int
             }
             break;
         case OUTER_WALL:
+            // horizontal and extremity to the right by default, so we check for the three other possible extremity orientation
+            if (up) {
+                *rota = true;
+                *deg = 90;
+            }
+            if (right) {
+                *rota = true;
+                *deg = 180;
+            }
+            if (down) {
+                *rota = true;
+                *deg = 270;
+            }
             break;
         case JUNCTION:
+            // vertical and connects to the up, right and bottom by default, checking the three others possible connection
+            if (left && down && right) {
+                *rota = true;
+                *deg = 90;
+            }
+            if (up && left && down) {
+                *rota = true;
+                *deg = 180;
+            }
+            if (left && up && right) {
+                *rota = true;
+                *deg = 270;
+            }
             break;
         case CORNER:
+            // connects bottom and right by default, checking the three others connections
+            if (down && left) {
+                *rota = true;
+                *deg = 90;
+            }
+            if (left && up) {
+                *rota = true;
+                *deg = 180;
+            }
+            if (up && right) {
+                *rota = true;
+                *deg = 270;
+            }
             break;
         default:
             break;
