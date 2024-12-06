@@ -17,6 +17,8 @@ typedef enum {
     POWERUP
 } CellType;
 
+extern CellType maze[ROWS][COLS];
+
 void load_all_maze_textures(SDL_Renderer* renderer);
 void need_rotation(bool* rota, int* deg, CellType maze[ROWS][COLS], int row, int col);
 void render_maze(SDL_Renderer* renderer, int* width, int* height);

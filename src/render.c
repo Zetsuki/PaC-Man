@@ -4,6 +4,8 @@
 #include <stdbool.h>
 #include "../include/render.h"
 #include "../include/maze.h"
+#include "../include/pacman.h"
+
 
 void initialize_SDL(SDL_Window** window, SDL_Renderer** renderer, const char* title, int* width, int* height) {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -36,17 +38,20 @@ void load_all_textures(SDL_Renderer* renderer) {
     load_all_maze_textures(renderer);
 }
 
-void cleanup(SDL_Window* window, SDL_Renderer* renderer) {
+void cleanup(SDL_Window* window, SDL_Renderer* renderer, Pacman* pacman) {
     cleanup_maze (window, renderer);
+    cleanup_pacman(pacman);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     IMG_Quit();
     SDL_Quit();
 }
 
-void render_loop(SDL_Renderer* renderer, SDL_Window* window, int* width, int* height) {
+void render_loop(SDL_Renderer* renderer, SDL_Window* window, int* width, int* height, Pacman* pacman) {
     int running = 1;
     SDL_Event event;
+
+    initialize_pacman(renderer, pacman);
 
     while (running) {
         while (SDL_PollEvent(&event)) {
@@ -58,23 +63,27 @@ void render_loop(SDL_Renderer* renderer, SDL_Window* window, int* width, int* he
                 *width = event.window.data1;
                 *height = event.window.data2;
             }
+            handle_pacman_event(&event, pacman);
         }
+
+        update_pacman(pacman, maze);
 
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
         render_maze(renderer, width, height);
+        render_pacman(renderer, pacman, width, height);
 
         SDL_RenderPresent(renderer);
-        SDL_Delay(16); // delay ≈ 60 fps
+        SDL_Delay(450);
     }
 }
 
-void render(const char* title, int* width, int* height) {
+void render(const char* title, int* width, int* height, Pacman* pacman) {
     SDL_Window* window;
     SDL_Renderer* renderer;
 
     initialize_SDL(&window, &renderer, title, width, height);
     load_all_textures(renderer);
-    render_loop(renderer, window, width, height);
-    cleanup(window, renderer);
+    render_loop(renderer, window, width, height, pacman);
+    cleanup(window, renderer, pacman);
 }
