@@ -21,6 +21,9 @@ typedef struct {
     Direction dir; 
     Direction next_dir;
     SDL_Texture* texture; 
+    SDL_Texture* powered_up_texture;
+    bool powered_up;
+    unsigned int powered_up_time_left;
 } Pacman;
 
 void initialize_pacman(SDL_Renderer* renderer, Pacman* pacman);

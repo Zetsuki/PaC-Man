@@ -74,7 +74,7 @@ void render_loop(SDL_Renderer* renderer, SDL_Window* window, int* width, int* he
         render_pacman(renderer, pacman, width, height);
 
         SDL_RenderPresent(renderer);
-        SDL_Delay(450);
+        SDL_Delay(300);
     }
 }
 

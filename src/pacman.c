@@ -19,33 +19,38 @@ void initialize_pacman(SDL_Renderer* renderer, Pacman* pacman) {
     if (!pacman->texture) {
         printf("Failed to load Pac-Man texture.\n");
     }
+  
+    pacman->powered_up_texture = load_texture(renderer, "assets/angry_pacman.png");
+    if (!pacman->powered_up_texture) {
+        printf("Failed to load Pac-Man powered up texture.\n");
+    }
+    pacman->powered_up = false;
+    pacman->powered_up_time_left = 0;
 }
 
 void handle_pacman_event(SDL_Event* event, Pacman* pacman) {
     if (event->type == SDL_KEYDOWN) {
         Direction new_dir = NONE;
         switch (event->key.keysym.sym) {
+            case SDLK_w:
+            case SDLK_z:
             case SDLK_UP:
                 new_dir = UP;
                 break;
+            case SDLK_s:
             case SDLK_DOWN:
                 new_dir = DOWN;
                 break;
+            case SDLK_a:
+            case SDLK_q:
             case SDLK_LEFT:
                 new_dir = LEFT;
                 break;
+            case SDLK_d:
             case SDLK_RIGHT:
                 new_dir = RIGHT;
                 break;
         }
-
-        if ((pacman->dir == UP && new_dir == DOWN) ||
-            (pacman->dir == DOWN && new_dir == UP) ||
-            (pacman->dir == LEFT && new_dir == RIGHT) ||
-            (pacman->dir == RIGHT && new_dir == LEFT)) {
-            return;
-        }
-
         pacman->next_dir = new_dir;
     }
 }
@@ -99,14 +104,24 @@ void update_pacman(Pacman* pacman, CellType maze[ROWS][COLS]) {
     }
 
     if (new_x >= 0 && new_x < COLS && new_y >= 0 && new_y < ROWS && !is_wall(maze[new_y][new_x])) {
-
         maze[pacman->y][pacman->x] = EMPTY;
-
         pacman->x = new_x;
         pacman->y = new_y;
-    }
-}
 
+        if (maze[new_y][new_x] == POWERUP) {
+            pacman->powered_up = true;
+            pacman->powered_up_time_left = 20;
+        }
+    }
+
+    if (pacman->powered_up_time_left == 0) {
+        pacman->powered_up = false;
+    }
+    else {
+        pacman->powered_up_time_left -= 1;
+    }
+
+}
 
 
 void render_pacman(SDL_Renderer* renderer, Pacman* pacman, int* width, int* height) {
@@ -128,25 +143,28 @@ void render_pacman(SDL_Renderer* renderer, Pacman* pacman, int* width, int* heig
         tile_height * scale
     };
 
+    SDL_Texture* current_texture = pacman->powered_up ? pacman->powered_up_texture : pacman->texture; 
+
     switch (pacman->dir) {
         case UP:
-            SDL_RenderCopyEx(renderer, pacman->texture, NULL, &destRect, 270, NULL, SDL_FLIP_VERTICAL);
+            SDL_RenderCopyEx(renderer, current_texture, NULL, &destRect, 270, NULL, SDL_FLIP_VERTICAL);
             break;
         case DOWN:
-            SDL_RenderCopyEx(renderer, pacman->texture, NULL, &destRect, 90, NULL, SDL_FLIP_VERTICAL);
+            SDL_RenderCopyEx(renderer, current_texture, NULL, &destRect, 90, NULL, SDL_FLIP_VERTICAL);
             break;
         case LEFT:
-            SDL_RenderCopyEx(renderer, pacman->texture, NULL, &destRect, 180, NULL, SDL_FLIP_VERTICAL);
+            SDL_RenderCopyEx(renderer, current_texture, NULL, &destRect, 180, NULL, SDL_FLIP_VERTICAL);
             break;
         case RIGHT:
-            SDL_RenderCopy(renderer, pacman->texture, NULL, &destRect);
+            SDL_RenderCopy(renderer, current_texture, NULL, &destRect);
             break;
         default:
-            SDL_RenderCopy(renderer, pacman->texture, NULL, &destRect);
+            SDL_RenderCopy(renderer, current_texture, NULL, &destRect);
             break;
     }
 }
 
 void cleanup_pacman(Pacman* pacman) {
     SDL_DestroyTexture(pacman->texture);
+    SDL_DestroyTexture(pacman->powered_up_texture);
 }
