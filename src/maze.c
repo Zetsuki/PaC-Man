@@ -75,7 +75,7 @@ void need_rotation(bool* rota, int* deg, CellType maze[ROWS][COLS], int row, int
     }
 };
 
-void render_maze(SDL_Renderer* renderer, int* width, int* height) {
+void render_maze(SDL_Renderer* renderer, unsigned int* width, unsigned int* height) {
     int tile_width = 32;
     int tile_height = 32;
 

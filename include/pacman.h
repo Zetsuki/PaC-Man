@@ -4,9 +4,7 @@
 #include <SDL2/SDL.h>
 #include <stdbool.h>
 #include "../include/maze.h"
-
-#define ROWS 11
-#define COLS 20
+#include "../include/config.h"
 
 typedef enum {
     UP,
@@ -26,10 +24,10 @@ typedef struct {
     unsigned int powered_up_time_left;
 } Pacman;
 
-void initialize_pacman(SDL_Renderer* renderer, Pacman* pacman);
+void initialize_pacman(Pacman* pacman);
 void handle_pacman_event(SDL_Event* event, Pacman* pacman);
-void update_pacman(Pacman* pacman, CellType maze[ROWS][COLS]);
-void render_pacman(SDL_Renderer* renderer, Pacman* pacman, int* width, int* height);
+void update_pacman(Pacman* pacman);
+void render_pacman(SDL_Renderer* renderer, Pacman* pacman, unsigned int* width, unsigned int* height);
 void cleanup_pacman(Pacman* pacman);
 
 #endif

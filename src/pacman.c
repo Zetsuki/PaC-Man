@@ -5,25 +5,19 @@
 #include "../include/pacman.h"
 #include "../include/maze.h"
 #include "../include/render.h"
+#include "../include/config.h"
 
 bool is_wall(CellType cell) {
     return cell == MIDDLE_WALL || cell == OUTER_WALL || cell == CORNER || cell == JUNCTION;
 }
 
-void initialize_pacman(SDL_Renderer* renderer, Pacman* pacman) {
-    pacman->x = 10;
-    pacman->y = 3;
+void initialize_pacman(Pacman* pacman) {
+    pacman->x = PACMAN_X;
+    pacman->y = PACMAN_Y;
     pacman->dir = NONE;
     pacman->next_dir = NONE;
-    pacman->texture = load_texture(renderer, "assets/pacman.png");
-    if (!pacman->texture) {
-        printf("Failed to load Pac-Man texture.\n");
-    }
-  
-    pacman->powered_up_texture = load_texture(renderer, "assets/angry_pacman.png");
-    if (!pacman->powered_up_texture) {
-        printf("Failed to load Pac-Man powered up texture.\n");
-    }
+    pacman->texture = NULL;
+    pacman->powered_up_texture = NULL;
     pacman->powered_up = false;
     pacman->powered_up_time_left = 0;
 }
@@ -55,7 +49,7 @@ void handle_pacman_event(SDL_Event* event, Pacman* pacman) {
     }
 }
 
-void update_pacman(Pacman* pacman, CellType maze[ROWS][COLS]) {
+void update_pacman(Pacman* pacman) {
     int new_x = pacman->x;
     int new_y = pacman->y;
 
@@ -134,7 +128,7 @@ void update_pacman(Pacman* pacman, CellType maze[ROWS][COLS]) {
 }
 
 
-void render_pacman(SDL_Renderer* renderer, Pacman* pacman, int* width, int* height) {
+void render_pacman(SDL_Renderer* renderer, Pacman* pacman, unsigned int* width, unsigned int* height) {
     int tile_width = 32;
     int tile_height = 32;
 

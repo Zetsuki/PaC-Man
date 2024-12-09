@@ -6,13 +6,23 @@
 #include "../include/maze.h"
 #include "../include/pacman.h"
 
+void initialize_render(RenderState* render, Pacman* pacman)
+{
+    SDL_Window* window;
+    SDL_Renderer* renderer;
 
-void initialize_SDL(SDL_Window** window, SDL_Renderer** renderer, const char* title, int* width, int* height) {
+    initialize_SDL(&window, &renderer, render->width, render->height);
+    render->window = window;
+    render->renderer = renderer;
+    load_all_textures(renderer, pacman);
+}
+
+void initialize_SDL(SDL_Window** window, SDL_Renderer** renderer, unsigned int* width, unsigned int* height) {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         printf("SDL init error: %s\n", SDL_GetError());
     }
 
-    *window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, *width, *height, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+    *window = SDL_CreateWindow("PaC-Man", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, *width, *height, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
     if (!*window) {
         printf("Error creating window: %s\n", SDL_GetError());
         SDL_Quit();
@@ -34,8 +44,16 @@ SDL_Texture* load_texture(SDL_Renderer* renderer, const char* file_path) {
     return texture;
 }
 
-void load_all_textures(SDL_Renderer* renderer) {
+void load_all_textures(SDL_Renderer* renderer, Pacman* pacman) {
     load_all_maze_textures(renderer);
+    pacman->texture = load_texture(renderer, "assets/pacman.png");
+    if (!pacman->texture) {
+        printf("Failed to load Pac-Man texture.\n");
+    }
+    pacman->powered_up_texture = load_texture(renderer, "assets/angry_pacman.png");
+    if (!pacman->powered_up_texture) {
+        printf("Failed to load Pac-Man powered up texture.\n");
+    }
 }
 
 void cleanup(SDL_Window* window, SDL_Renderer* renderer, Pacman* pacman) {
@@ -47,11 +65,11 @@ void cleanup(SDL_Window* window, SDL_Renderer* renderer, Pacman* pacman) {
     SDL_Quit();
 }
 
-void render_loop(SDL_Renderer* renderer, SDL_Window* window, int* width, int* height, Pacman* pacman) {
+void render_loop(SDL_Renderer* renderer, SDL_Window* window, unsigned int* width, unsigned int* height, Pacman* pacman) {
     int running = 1;
     SDL_Event event;
 
-    initialize_pacman(renderer, pacman);
+    initialize_pacman(pacman);
 
     while (running) {
         while (SDL_PollEvent(&event)) {
@@ -66,7 +84,7 @@ void render_loop(SDL_Renderer* renderer, SDL_Window* window, int* width, int* he
             handle_pacman_event(&event, pacman);
         }
 
-        update_pacman(pacman, maze);
+        update_pacman(pacman);
 
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
@@ -75,15 +93,16 @@ void render_loop(SDL_Renderer* renderer, SDL_Window* window, int* width, int* he
 
         SDL_RenderPresent(renderer);
         SDL_Delay(300);
+        
     }
 }
 
-void render(const char* title, int* width, int* height, Pacman* pacman) {
-    SDL_Window* window;
-    SDL_Renderer* renderer;
+void render(RenderState* render, Pacman* pacman) {
+    SDL_SetRenderDrawColor(render->renderer, 0, 0, 0, 255);
+    SDL_RenderClear(render->renderer);
+    render_maze(render->renderer, render->width, render->height);
+    render_pacman(render->renderer, pacman, render->width, render->height);
 
-    initialize_SDL(&window, &renderer, title, width, height);
-    load_all_textures(renderer);
-    render_loop(renderer, window, width, height, pacman);
-    cleanup(window, renderer, pacman);
+    SDL_RenderPresent(render->renderer);
+    SDL_Delay(300);
 }
