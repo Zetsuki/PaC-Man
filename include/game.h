@@ -2,8 +2,6 @@
 #define GAME_H
 
 #include "../include/pacman.h"
-#include "../include/maze.h"
-#include "../include/config.h"
 #include "../include/render.h"
 #include <stdbool.h>
 

@@ -1,6 +1,4 @@
 #include "../include/game.h"
-#include "../include/maze.h"
-#include "../include/render.h"
 
 void init_game(GameState* gamestate, unsigned int* width, unsigned int* height) {
     gamestate->pacman = (Pacman*)malloc(sizeof(Pacman));

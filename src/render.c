@@ -46,14 +46,7 @@ SDL_Texture* load_texture(SDL_Renderer* renderer, const char* file_path) {
 
 void load_all_textures(SDL_Renderer* renderer, Pacman* pacman) {
     load_all_maze_textures(renderer);
-    pacman->texture = load_texture(renderer, "assets/pacman.png");
-    if (!pacman->texture) {
-        printf("Failed to load Pac-Man texture.\n");
-    }
-    pacman->powered_up_texture = load_texture(renderer, "assets/angry_pacman.png");
-    if (!pacman->powered_up_texture) {
-        printf("Failed to load Pac-Man powered up texture.\n");
-    }
+    load_all_pac_textures(renderer, pacman);
 }
 
 void cleanup(SDL_Window* window, SDL_Renderer* renderer, Pacman* pacman) {

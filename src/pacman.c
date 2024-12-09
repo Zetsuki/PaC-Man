@@ -1,7 +1,4 @@
 #include <stdio.h>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <stdbool.h>
 #include "../include/pacman.h"
 #include "../include/maze.h"
 #include "../include/render.h"
@@ -20,6 +17,17 @@ void initialize_pacman(Pacman* pacman) {
     pacman->powered_up_texture = NULL;
     pacman->powered_up = false;
     pacman->powered_up_time_left = 0;
+}
+
+void load_all_pac_textures(SDL_Renderer* renderer, Pacman* pacman) {
+    pacman->texture = load_texture(renderer, "assets/pacman.png");
+    if (!pacman->texture) {
+        printf("Failed to load Pac-Man texture.\n");
+    }
+    pacman->powered_up_texture = load_texture(renderer, "assets/angry_pacman.png");
+    if (!pacman->powered_up_texture) {
+        printf("Failed to load Pac-Man powered up texture.\n");
+    }
 }
 
 void handle_pacman_event(SDL_Event* event, Pacman* pacman) {

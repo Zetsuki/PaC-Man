@@ -1,6 +1,3 @@
-#include "../include/maze.h"
-#include "../include/render.h"
-#include "../include/pacman.h"
 #include "../include/game.h"
 
 int main (int argc, char** argv)

@@ -3,8 +3,6 @@
 
 #include <SDL2/SDL.h>
 #include <stdbool.h>
-#include "../include/maze.h"
-#include "../include/config.h"
 
 typedef enum {
     UP,
@@ -25,6 +23,7 @@ typedef struct {
 } Pacman;
 
 void initialize_pacman(Pacman* pacman);
+void load_all_pac_textures(SDL_Renderer* renderer, Pacman* pacman);
 void handle_pacman_event(SDL_Event* event, Pacman* pacman);
 void update_pacman(Pacman* pacman);
 void render_pacman(SDL_Renderer* renderer, Pacman* pacman, unsigned int* width, unsigned int* height);

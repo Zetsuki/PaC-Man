@@ -1,7 +1,5 @@
 #include <stdio.h>
 #include <stdbool.h>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
 #include "../include/maze.h"
 #include "../include/render.h"
 
@@ -76,17 +74,14 @@ void need_rotation(bool* rota, int* deg, CellType maze[ROWS][COLS], int row, int
 };
 
 void render_maze(SDL_Renderer* renderer, unsigned int* width, unsigned int* height) {
-    int tile_width = 32;
-    int tile_height = 32;
-
     // calculation of scale factor and offsets 
-    float scale_x = (float)*width / (COLS * tile_width);
-    float scale_y = (float)*height / (ROWS * tile_height);
+    float scale_x = (float)*width / (COLS * TILE_WIDTH);
+    float scale_y = (float)*height / (ROWS * TILE_HEIGHT);
     float scale = scale_x < scale_y ? scale_x : scale_y; // aspect ratio
     scale *= 0.85f; // 85%
 
-    int offset_x = (*width - (COLS * tile_width * scale)) / 2;
-    int offset_y = (*height - (ROWS * tile_height * scale)) / 2;
+    int offset_x = (*width - (COLS * TILE_WIDTH * scale)) / 2;
+    int offset_y = (*height - (ROWS * TILE_HEIGHT * scale)) / 2;
 
     bool needs_rotation;
     int rotation_degrees;
@@ -94,10 +89,10 @@ void render_maze(SDL_Renderer* renderer, unsigned int* width, unsigned int* heig
     for (int row = 0; row < ROWS; ++row) {
         for (int col = 0; col < COLS; ++col) {
             SDL_Rect destRect = { 
-                offset_x + col * tile_width * scale,
-                offset_y + row * tile_height * scale,
-                tile_width * scale,
-                tile_height * scale
+                offset_x + col * TILE_WIDTH * scale,
+                offset_y + row * TILE_HEIGHT * scale,
+                TILE_WIDTH * scale,
+                TILE_HEIGHT * scale
             };
 
             // rotate texture if needed
