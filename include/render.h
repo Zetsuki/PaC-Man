@@ -1,5 +1,5 @@
-#ifndef render_H
-#define render_H
+#ifndef RENDER_H
+#define RENDER_H
 
 #include <SDL2/SDL.h>
 #include "../include/pacman.h"

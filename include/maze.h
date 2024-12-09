@@ -1,5 +1,5 @@
-#ifndef maze_H
-#define maze_H
+#ifndef MAZE_H
+#define MAZE_H
 
 #include <SDL2/SDL.h>
 #include <stdbool.h>

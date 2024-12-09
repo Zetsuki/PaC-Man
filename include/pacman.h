@@ -1,5 +1,5 @@
-#ifndef pacman_H
-#define pacman_H
+#ifndef PACMAN_H
+#define PACMAN_H
 
 #include <SDL2/SDL.h>
 #include <stdbool.h>
