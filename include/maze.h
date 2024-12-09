@@ -13,6 +13,7 @@ typedef enum {
     OUTER_WALL,
     JUNCTION,
     CORNER, 
+    WARP,
     POINT,
     POWERUP
 } CellType;

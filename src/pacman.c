@@ -94,17 +94,27 @@ void update_pacman(Pacman* pacman, CellType maze[ROWS][COLS]) {
             new_y += 1;
             break;
         case LEFT:
-            new_x -= 1;
+            if (pacman->x > 0 && maze[pacman->y][pacman->x - 1] != WARP) {
+                new_x -= 1; 
+            } else if (maze[pacman->y][pacman->x - 1] == WARP) {
+                new_x = COLS - 1;
+            }
             break;
         case RIGHT:
-            new_x += 1;
+            if (pacman->x < COLS - 1 && maze[pacman->y][pacman->x + 1] != WARP) {
+                new_x += 1;
+            } else if (maze[pacman->y][pacman->x + 1] == WARP) {
+                new_x = 0; 
+            }
             break;
         default:
             break;
     }
 
     if (new_x >= 0 && new_x < COLS && new_y >= 0 && new_y < ROWS && !is_wall(maze[new_y][new_x])) {
-        maze[pacman->y][pacman->x] = EMPTY;
+        if (maze[pacman->y][pacman->x] != WARP) {
+            maze[pacman->y][pacman->x] = EMPTY;
+        }
         pacman->x = new_x;
         pacman->y = new_y;
 
