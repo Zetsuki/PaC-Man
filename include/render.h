@@ -3,20 +3,28 @@
 
 #include <SDL2/SDL.h>
 #include "../include/pacman.h"
+#include "../include/config.h"
 
 typedef struct {
     SDL_Window* window;
     SDL_Renderer* renderer;
     unsigned int* width;
     unsigned int* height;
+    SDL_Texture* maze_cell_textures[8];
+    SDL_Texture* pacman_texture;
+    SDL_Texture* angry_pacman_texture;
 } RenderState;
 
-void initialize_render(RenderState* render, Pacman* pacman);
 void initialize_SDL(SDL_Window** window, SDL_Renderer** renderer, unsigned int* width, unsigned int* height);
+void initialize_render(RenderState* render, Pacman* pacman);
 SDL_Texture* load_texture(SDL_Renderer* renderer, const char* file_path);
-void load_all_textures(SDL_Renderer* renderer, Pacman* pacman);
-void cleanup(SDL_Window* window, SDL_Renderer* renderer, Pacman* pacman);
-void render_loop(SDL_Renderer* renderer, SDL_Window* window, unsigned int* width, unsigned int* height, Pacman* pacman);
+void load_all_textures(RenderState* render, Pacman* pacman);
+void need_rotation(bool* rota, int* deg, CellType maze[ROWS][COLS], int row, int col);
+void calculate_scale_and_offsets(RenderState* render, float* scale, int* offset_x, int* offset_y);
+void render_scaled_texture(RenderState* render, SDL_Texture* texture, int x, int y, float scale, int offset_x, int offset_y, int rotation_degrees, bool needs_rotation);
+void render_maze(RenderState* render);
+void render_pacman(RenderState* render, Pacman* pacman);
 void render(RenderState* render, Pacman* pacman);
+void cleanup(RenderState* render, Pacman* pacman);
 
 #endif

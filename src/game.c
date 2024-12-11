@@ -1,4 +1,7 @@
+#include "../include/pacman.h"
+#include "../include/render.h"
 #include "../include/game.h"
+
 
 void init_game(GameState* gamestate, unsigned int* width, unsigned int* height) {
     gamestate->pacman = (Pacman*)malloc(sizeof(Pacman));
@@ -14,7 +17,6 @@ void init_game(GameState* gamestate, unsigned int* width, unsigned int* height) 
         free(gamestate->pacman); 
         return;
     }
-
     gamestate->render->width = width;
     gamestate->render->height = height;
     initialize_render(gamestate->render, gamestate->pacman);    
@@ -40,5 +42,11 @@ void game_loop(GameState* gamestate)  {
     update_pacman(gamestate->pacman);
     render(gamestate->render, gamestate->pacman);
     }
-    cleanup(gamestate->render->window, gamestate->render->renderer, gamestate->pacman);
+    cleanup(gamestate->render, gamestate->pacman);
+}
+
+void free_memory(GameState* gamestate) {
+    free(gamestate->render);
+    free(gamestate->pacman);
+    free(gamestate);
 }

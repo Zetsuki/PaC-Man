@@ -13,4 +13,17 @@
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 720
 
+typedef enum {
+    EMPTY, 
+    MIDDLE_WALL,
+    OUTER_WALL,
+    JUNCTION,
+    CORNER, 
+    WARP,
+    POINT,
+    POWERUP
+} CellType;
+
+extern CellType maze[ROWS][COLS];
+
 #endif

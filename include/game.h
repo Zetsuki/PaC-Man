@@ -13,5 +13,6 @@ typedef struct {
 
 void init_game(GameState* gamestate, unsigned int* width, unsigned int* height);
 void game_loop(GameState* gamestate);
+void free_memory(GameState* gamestate);
 
 #endif

@@ -1,7 +1,5 @@
 #include <stdio.h>
 #include "../include/pacman.h"
-#include "../include/maze.h"
-#include "../include/render.h"
 #include "../include/config.h"
 
 bool is_wall(CellType cell) {
@@ -13,21 +11,8 @@ void initialize_pacman(Pacman* pacman) {
     pacman->y = PACMAN_Y;
     pacman->dir = NONE;
     pacman->next_dir = NONE;
-    pacman->texture = NULL;
-    pacman->powered_up_texture = NULL;
     pacman->powered_up = false;
     pacman->powered_up_time_left = 0;
-}
-
-void load_all_pac_textures(SDL_Renderer* renderer, Pacman* pacman) {
-    pacman->texture = load_texture(renderer, "assets/pacman.png");
-    if (!pacman->texture) {
-        printf("Failed to load Pac-Man texture.\n");
-    }
-    pacman->powered_up_texture = load_texture(renderer, "assets/angry_pacman.png");
-    if (!pacman->powered_up_texture) {
-        printf("Failed to load Pac-Man powered up texture.\n");
-    }
 }
 
 void handle_pacman_event(SDL_Event* event, Pacman* pacman) {
@@ -133,50 +118,4 @@ void update_pacman(Pacman* pacman) {
         pacman->powered_up_time_left -= 1;
     }
 
-}
-
-
-void render_pacman(SDL_Renderer* renderer, Pacman* pacman, unsigned int* width, unsigned int* height) {
-    int tile_width = 32;
-    int tile_height = 32;
-
-    float scale_x = (float)*width / (COLS * tile_width);
-    float scale_y = (float)*height / (ROWS * tile_height);
-    float scale = scale_x < scale_y ? scale_x : scale_y;
-    scale *= 0.85f;
-
-    int offset_x = (*width - (COLS * tile_width * scale)) / 2;
-    int offset_y = (*height - (ROWS * tile_height * scale)) / 2;
-
-    SDL_Rect destRect = {
-        offset_x + pacman->x * tile_width * scale,
-        offset_y + pacman->y * tile_height * scale,
-        tile_width * scale,
-        tile_height * scale
-    };
-
-    SDL_Texture* current_texture = pacman->powered_up ? pacman->powered_up_texture : pacman->texture; 
-
-    switch (pacman->dir) {
-        case UP:
-            SDL_RenderCopyEx(renderer, current_texture, NULL, &destRect, 270, NULL, SDL_FLIP_VERTICAL);
-            break;
-        case DOWN:
-            SDL_RenderCopyEx(renderer, current_texture, NULL, &destRect, 90, NULL, SDL_FLIP_VERTICAL);
-            break;
-        case LEFT:
-            SDL_RenderCopyEx(renderer, current_texture, NULL, &destRect, 180, NULL, SDL_FLIP_VERTICAL);
-            break;
-        case RIGHT:
-            SDL_RenderCopy(renderer, current_texture, NULL, &destRect);
-            break;
-        default:
-            SDL_RenderCopy(renderer, current_texture, NULL, &destRect);
-            break;
-    }
-}
-
-void cleanup_pacman(Pacman* pacman) {
-    SDL_DestroyTexture(pacman->texture);
-    SDL_DestroyTexture(pacman->powered_up_texture);
 }
