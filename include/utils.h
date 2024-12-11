@@ -16,6 +16,14 @@
 #define WINDOW_HEIGHT 720
 
 typedef enum {
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT,
+    NONE
+} Direction;
+
+typedef enum {
     EMPTY, 
     MIDDLE_WALL,
     OUTER_WALL,

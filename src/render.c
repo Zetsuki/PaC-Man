@@ -44,6 +44,7 @@ SDL_Texture* load_texture(SDL_Renderer* renderer, const char* file_path) {
     return texture;
 }
 
+// load all relevent textures for the game
 void load_all_textures(RenderState* render, Pacman* pacman) {
     render->maze_cell_textures[EMPTY] = load_texture(render->renderer, "assets/empty.png");
     render->maze_cell_textures[MIDDLE_WALL] = load_texture(render->renderer, "assets/middle_wall.png");
@@ -53,14 +54,9 @@ void load_all_textures(RenderState* render, Pacman* pacman) {
     render->maze_cell_textures[WARP] = load_texture(render->renderer, "assets/warp.png");
     render->maze_cell_textures[POINT] = load_texture(render->renderer, "assets/point.png");
     render->maze_cell_textures[POWERUP] = load_texture(render->renderer, "assets/powerup.png");
+
     render->pacman_texture = load_texture(render->renderer, "assets/pacman.png");
-    if (!render->pacman_texture) {
-        printf("Failed to load Pac-Man texture.\n");
-    }
     render->angry_pacman_texture = load_texture(render->renderer, "assets/angry_pacman.png");
-    if (!render->angry_pacman_texture) {
-        printf("Failed to load Pac-Man powered up texture.\n");
-    }
 }
 
 // checks if the current CellType [row][col] needs to be rotated to smooth the texture
@@ -105,6 +101,7 @@ void need_rotation(bool* rota, int* deg, CellType maze[ROWS][COLS], int row, int
     }
 };
 
+// get scales and offsets so the game is scalable to the window size
 void calculate_scale_and_offsets(RenderState* render, float* scale, int* offset_x, int* offset_y) {
     float scale_x = (float)*render->width / (COLS * TILE_WIDTH);
     float scale_y = (float)*render->height / (ROWS * TILE_HEIGHT);
@@ -115,6 +112,7 @@ void calculate_scale_and_offsets(RenderState* render, float* scale, int* offset_
     *offset_y = (*render->height - (ROWS * TILE_HEIGHT * (*scale))) / 2;
 }
 
+// render texture using scale and offsets
 void render_scaled_texture(RenderState* render, SDL_Texture* texture, int x, int y, float scale, int offset_x, int offset_y, int rotation_degrees, bool needs_rotation) {
     SDL_Rect destRect = {
         offset_x + x * TILE_WIDTH * scale,
@@ -183,6 +181,7 @@ void render_pacman(RenderState* render, Pacman* pacman) {
 void render(RenderState* render, Pacman* pacman) {
     SDL_SetRenderDrawColor(render->renderer, 0, 0, 0, 255);
     SDL_RenderClear(render->renderer);
+    
     render_maze(render);
     render_pacman(render, pacman);
 

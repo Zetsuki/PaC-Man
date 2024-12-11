@@ -11,6 +11,7 @@ void initialize_pacman(Pacman* pacman) {
     pacman->powered_up_time_left = 0;
 }
 
+// handling user inputs to move (arrows, WASD and ZQSD)
 void handle_pacman_event(SDL_Event* event, Pacman* pacman) {
     if (event->type == SDL_KEYDOWN) {
         Direction new_dir = NONE;
@@ -38,10 +39,12 @@ void handle_pacman_event(SDL_Event* event, Pacman* pacman) {
     }
 }
 
+// handle pacman movement, postion and power up
 void update_pacman(Pacman* pacman) {
     int new_x = pacman->x;
     int new_y = pacman->y;
 
+    // checking if the direction chosen by the user is valid
     if (pacman->next_dir != NONE) {
         switch (pacman->next_dir) {
             case UP:
@@ -69,6 +72,7 @@ void update_pacman(Pacman* pacman) {
         }
     }
 
+    // updating pacman position and also handling warping
     switch (pacman->dir) {
         case UP:
             new_y -= 1;
@@ -94,6 +98,7 @@ void update_pacman(Pacman* pacman) {
             break;
     }
 
+    // handling texture swapping after pacman passage
     if (new_x >= 0 && new_x < COLS && new_y >= 0 && new_y < ROWS && !is_wall(maze[new_y][new_x])) {
         if (maze[pacman->y][pacman->x] != WARP) {
             maze[pacman->y][pacman->x] = EMPTY;
@@ -107,6 +112,7 @@ void update_pacman(Pacman* pacman) {
         }
     }
 
+    // handling power up
     if (pacman->powered_up_time_left == 0) {
         pacman->powered_up = false;
     }

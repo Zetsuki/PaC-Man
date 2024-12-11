@@ -2,7 +2,7 @@
 #include "../include/render.h"
 #include "../include/game.h"
 
-
+// initialize all the gamestate elements
 void init_game(GameState* gamestate, unsigned int* width, unsigned int* height) {
     gamestate->pacman = (Pacman*)malloc(sizeof(Pacman));
     if (!gamestate->pacman) {
@@ -25,6 +25,7 @@ void init_game(GameState* gamestate, unsigned int* width, unsigned int* height) 
     gamestate->is_game_over = false;
 }
 
+// the main loop for the game
 void game_loop(GameState* gamestate)  {
     SDL_Event event;
     while (gamestate->is_game_over != true) {
