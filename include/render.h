@@ -26,7 +26,7 @@ void need_rotation(bool* rota, int* deg, CellType maze[ROWS][COLS], int row, int
 // get scale and offsets so the game is scalable to the window size
 void calculate_scale_and_offsets(RenderState* render, float* scale, int* offset_x, int* offset_y);
 
-void render_scaled_texture(RenderState* render, SDL_Texture* texture, int x, int y, float scale, int offset_x, int offset_y, int rotation_degrees, bool needs_rotation);
+void render_scaled_texture(RenderState* render, SDL_Texture* texture, int x, int y, float scale, int offset_x, int offset_y, int rotation_degrees, bool needs_rotation, SDL_RendererFlip flip);
 void render_maze(RenderState* render);
 void render_pacman(RenderState* render, Pacman* pacman);
 void render(RenderState* render, Pacman* pacman);

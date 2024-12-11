@@ -113,7 +113,7 @@ void calculate_scale_and_offsets(RenderState* render, float* scale, int* offset_
 }
 
 // render texture using scale and offsets
-void render_scaled_texture(RenderState* render, SDL_Texture* texture, int x, int y, float scale, int offset_x, int offset_y, int rotation_degrees, bool needs_rotation) {
+void render_scaled_texture(RenderState* render, SDL_Texture* texture, int x, int y, float scale, int offset_x, int offset_y, int rotation_degrees, bool needs_rotation, SDL_RendererFlip flip) {
     SDL_Rect destRect = {
         offset_x + x * TILE_WIDTH * scale,
         offset_y + y * TILE_HEIGHT * scale,
@@ -122,7 +122,7 @@ void render_scaled_texture(RenderState* render, SDL_Texture* texture, int x, int
     };
 
     if (needs_rotation) {
-        SDL_RenderCopyEx(render->renderer, texture, NULL, &destRect, rotation_degrees, NULL, SDL_FLIP_NONE);
+        SDL_RenderCopyEx(render->renderer, texture, NULL, &destRect, rotation_degrees, NULL, flip);
     } else {
         SDL_RenderCopy(render->renderer, texture, NULL, &destRect);
     }
@@ -140,7 +140,7 @@ void render_maze(RenderState* render) {
     for (int row = 0; row < ROWS; ++row) {
         for (int col = 0; col < COLS; ++col) {
             need_rotation(&needs_rotation, &rotation_degrees, maze, row, col);
-            render_scaled_texture(render, render->maze_cell_textures[maze[row][col]], col, row, scale, offset_x, offset_y, rotation_degrees, needs_rotation);
+            render_scaled_texture(render, render->maze_cell_textures[maze[row][col]], col, row, scale, offset_x, offset_y, rotation_degrees, needs_rotation, SDL_FLIP_NONE);
         }
     }
 }
@@ -154,34 +154,40 @@ void render_pacman(RenderState* render, Pacman* pacman) {
     SDL_Texture* current_texture = pacman->powered_up ? render->angry_pacman_texture : render->pacman_texture;
     int rotation_degrees = 0;
     bool needs_rotation = false;
+    SDL_RendererFlip flip = SDL_FLIP_NONE;
 
     switch (pacman->dir) {
         case UP:
             rotation_degrees = 270;
             needs_rotation = true;
+            flip =  SDL_FLIP_NONE;
             break;
         case DOWN:
             rotation_degrees = 90;
             needs_rotation = true;
+            flip = SDL_FLIP_VERTICAL;
             break;
         case LEFT:
             rotation_degrees = 180;
             needs_rotation = true;
+            flip = SDL_FLIP_VERTICAL;
             break;
         case RIGHT:
             needs_rotation = false;
+            flip = SDL_FLIP_NONE;
             break;
         default:
             needs_rotation = false;
+            flip = SDL_FLIP_NONE;
             break;
     }
-    render_scaled_texture(render, current_texture, pacman->x, pacman->y, scale, offset_x, offset_y, rotation_degrees, needs_rotation);
+    render_scaled_texture(render, current_texture, pacman->x, pacman->y, scale, offset_x, offset_y, rotation_degrees, needs_rotation, flip);
 }
 
 void render(RenderState* render, Pacman* pacman) {
     SDL_SetRenderDrawColor(render->renderer, 0, 0, 0, 255);
     SDL_RenderClear(render->renderer);
-    
+
     render_maze(render);
     render_pacman(render, pacman);
 
