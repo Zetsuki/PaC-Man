@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include "../include/pacman.h"
-#include "../include/config.h"
+#include "../include/utils.h"
 #include "../include/render.h"
 
 void initialize_SDL(SDL_Window** window, SDL_Renderer** renderer, unsigned int* width, unsigned int* height) {

@@ -1,5 +1,5 @@
 #include "../include/game.h"
-#include "../include/config.h"
+#include "../include/utils.h"
 
 int main (int argc, char** argv)
 {   

@@ -1,10 +1,6 @@
 #include <stdio.h>
 #include "../include/pacman.h"
-#include "../include/config.h"
-
-bool is_wall(CellType cell) {
-    return cell == MIDDLE_WALL || cell == OUTER_WALL || cell == CORNER || cell == JUNCTION;
-}
+#include "../include/utils.h"
 
 void initialize_pacman(Pacman* pacman) {
     pacman->x = PACMAN_X;

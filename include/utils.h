@@ -1,6 +1,8 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include <stdbool.h>
+
 #define ROWS 11
 #define COLS 20
 
@@ -25,5 +27,7 @@ typedef enum {
 } CellType;
 
 extern CellType maze[ROWS][COLS];
+
+bool is_wall(CellType cell);
 
 #endif
