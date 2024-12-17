@@ -5,11 +5,13 @@
 #include "../include/utils.h"
 
 typedef struct {
+    char* name;
     int x, y; 
     Direction dir; // current direction
-    bool is_vulnerable;
+    bool back_to_spawn;
 } Ghost;
 
-void initialize_ghost(Ghost* ghost);
+void initialize_ghost(Ghost* ghost, char* name);
+void update_ghost(Ghost* ghost);
 
 #endif

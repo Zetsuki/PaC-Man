@@ -9,6 +9,7 @@ void initialize_pacman(Pacman* pacman) {
     pacman->next_dir = NONE;
     pacman->powered_up = false;
     pacman->powered_up_time_left = 0;
+    pacman->life = 3;
 }
 
 // handling user inputs to move (arrows, WASD and ZQSD)
@@ -98,26 +99,20 @@ void update_pacman(Pacman* pacman) {
             break;
     }
 
-    // handling texture swapping after pacman passage
     if (new_x >= 0 && new_x < COLS && new_y >= 0 && new_y < ROWS && !is_wall(maze[new_y][new_x])) {
-        if (maze[pacman->y][pacman->x] != WARP) {
-            maze[pacman->y][pacman->x] = EMPTY;
-        }
         pacman->x = new_x;
         pacman->y = new_y;
-
-        if (maze[new_y][new_x] == POWERUP) {
-            pacman->powered_up = true;
-            pacman->powered_up_time_left = 20;
-        }
     }
-
+    
     // handling power up
+    if (maze[pacman->y][pacman->x] == POWERUP) {
+        pacman->powered_up = true;
+        pacman->powered_up_time_left = 20;
+    }
     if (pacman->powered_up_time_left == 0) {
         pacman->powered_up = false;
     }
     else {
         pacman->powered_up_time_left -= 1;
     }
-
 }

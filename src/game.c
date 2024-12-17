@@ -25,6 +25,11 @@ void init_game(GameState* gamestate, unsigned int* width, unsigned int* height) 
     gamestate->is_game_over = false;
 }
 
+// handle pacman life loss, and ghost being eaten by pac
+void pacman_ghost_interaction(GameState* gamestate) {
+
+}
+
 // the main loop for the game
 void game_loop(GameState* gamestate)  {
     SDL_Event event;

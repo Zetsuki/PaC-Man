@@ -112,6 +112,13 @@ void calculate_scale_and_offsets(RenderState* render, float* scale, int* offset_
     *offset_y = (*render->height - (ROWS * TILE_HEIGHT * (*scale))) / 2;
 }
 
+// texture swapping when pacman eats pellets
+void swap_texture(Pacman* pacman) {
+    if (maze[pacman->y][pacman->x] != WARP) {
+        maze[pacman->y][pacman->x] = EMPTY;
+    }
+}
+
 // render texture using scale and offsets
 void render_scaled_texture(RenderState* render, SDL_Texture* texture, int x, int y, float scale, int offset_x, int offset_y, int rotation_degrees, bool needs_rotation, SDL_RendererFlip flip) {
     SDL_Rect destRect = {
@@ -188,6 +195,7 @@ void render(RenderState* render, Pacman* pacman) {
     SDL_SetRenderDrawColor(render->renderer, 0, 0, 0, 255);
     SDL_RenderClear(render->renderer);
 
+    swap_texture(pacman);
     render_maze(render);
     render_pacman(render, pacman);
 

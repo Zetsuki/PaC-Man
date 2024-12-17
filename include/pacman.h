@@ -8,9 +8,10 @@
 typedef struct {
     int x, y; 
     Direction dir; // current direction
-    Direction next_dir; // next direction
+    Direction next_dir; // next direction (buffer)
     bool powered_up;
     unsigned int powered_up_time_left;
+    unsigned int life;
 } Pacman;
 
 void initialize_pacman(Pacman* pacman);

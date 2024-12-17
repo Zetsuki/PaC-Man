@@ -12,6 +12,10 @@ typedef struct {
 } GameState;
 
 void init_game(GameState* gamestate, unsigned int* width, unsigned int* height);
+
+// handle pacman life loss, and ghost being eaten by pac
+void pacman_ghost_interaction(GameState* gamestate);
+
 void game_loop(GameState* gamestate);
 void free_memory(GameState* gamestate);
 

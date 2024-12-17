@@ -12,6 +12,18 @@
 #define PACMAN_X 10
 #define PACMAN_Y 3
 
+#define BLINKY_X 10
+#define BLINKY_Y 3
+
+#define PINKY_X 10
+#define PINKY_Y 3
+
+#define INKY_X 10
+#define INKY_Y 3
+
+#define CLYDE_X 10
+#define CLYDE_Y 3
+
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 720
 
