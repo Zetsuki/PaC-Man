@@ -22,8 +22,14 @@ void initialize_ghost(Ghost* ghost, char* name) {
     }
     ghost->dir = NONE;
     ghost->back_to_spawn = false;
+    ghost->memory = 8;
+    ghost->current_memory = 0;
 }
 
-void update_ghost(Ghost* ghost) {
-    
+void update_ghost(Ghost* ghost, Pacman* pacman) {
+    // idling/roaming
+    if(ghost->current_memory == 0)
+    {
+        
+    }
 }
