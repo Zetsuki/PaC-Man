@@ -3,6 +3,7 @@
 
 #include <SDL2/SDL.h>
 #include "../include/pacman.h"
+#include "../include/ghost.h"
 #include "../include/utils.h"
 
 typedef struct {
@@ -32,7 +33,8 @@ void swap_texture(Pacman* pacman);
 void render_scaled_texture(RenderState* render, SDL_Texture* texture, int x, int y, float scale, int offset_x, int offset_y, int rotation_degrees, bool needs_rotation, SDL_RendererFlip flip);
 void render_maze(RenderState* render);
 void render_pacman(RenderState* render, Pacman* pacman);
-void render(RenderState* render, Pacman* pacman);
+void render_ghost(RenderState* render, Ghost* ghost);
+void render(RenderState* render, Pacman* pacman, Ghost* ghost);
 
 void cleanup(RenderState* render, Pacman* pacman);
 

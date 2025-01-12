@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include "../include/pacman.h"
+#include "../include/ghost.h"
 #include "../include/utils.h"
 #include "../include/render.h"
 
@@ -191,13 +192,53 @@ void render_pacman(RenderState* render, Pacman* pacman) {
     render_scaled_texture(render, current_texture, pacman->x, pacman->y, scale, offset_x, offset_y, rotation_degrees, needs_rotation, flip);
 }
 
-void render(RenderState* render, Pacman* pacman) {
+void render_ghost(RenderState* render, Ghost* ghost) {
+    float scale;
+    int offset_x, offset_y;
+
+    calculate_scale_and_offsets(render, &scale, &offset_x, &offset_y);
+
+    SDL_Texture* current_texture = render->pacman_texture;
+    int rotation_degrees = 0;
+    bool needs_rotation = false;
+    SDL_RendererFlip flip = SDL_FLIP_NONE;
+
+    switch (ghost->dir) {
+        case UP:
+            rotation_degrees = 270;
+            needs_rotation = true;
+            flip =  SDL_FLIP_NONE;
+            break;
+        case DOWN:
+            rotation_degrees = 90;
+            needs_rotation = true;
+            flip = SDL_FLIP_VERTICAL;
+            break;
+        case LEFT:
+            rotation_degrees = 180;
+            needs_rotation = true;
+            flip = SDL_FLIP_VERTICAL;
+            break;
+        case RIGHT:
+            needs_rotation = false;
+            flip = SDL_FLIP_NONE;
+            break;
+        default:
+            needs_rotation = false;
+            flip = SDL_FLIP_NONE;
+            break;
+    }
+    render_scaled_texture(render, current_texture, ghost->x, ghost->y, scale, offset_x, offset_y, rotation_degrees, needs_rotation, flip);
+}
+
+void render(RenderState* render, Pacman* pacman, Ghost* ghost) {
     SDL_SetRenderDrawColor(render->renderer, 0, 0, 0, 255);
     SDL_RenderClear(render->renderer);
 
     swap_texture(pacman);
     render_maze(render);
     render_pacman(render, pacman);
+    render_ghost(render, ghost);
 
     SDL_RenderPresent(render->renderer);
     SDL_Delay(300);

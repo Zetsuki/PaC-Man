@@ -3,10 +3,12 @@
 
 #include "../include/pacman.h"
 #include "../include/render.h"
+#include "../include/ghost.h"
 #include <stdbool.h>
 
 typedef struct {
     Pacman* pacman;
+    Ghost* ghost;
     bool is_game_over;
     RenderState* render; // in charge of rendering the game
 } GameState;

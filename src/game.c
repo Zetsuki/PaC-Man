@@ -11,6 +11,13 @@ void init_game(GameState* gamestate, unsigned int* width, unsigned int* height) 
     }
     initialize_pacman(gamestate->pacman);
 
+    gamestate->ghost = (Ghost*)malloc(sizeof(Ghost));
+    if (!gamestate->ghost) {
+        printf("Failed to allocate memory for Pacman\n");
+        return;
+    }
+    initialize_ghost(gamestate->ghost, "BLINKY");
+
     gamestate->render = (RenderState*)malloc(sizeof(RenderState));
     if (!gamestate->render) {
         printf("Failed to allocate memory for RenderState\n");
@@ -46,7 +53,8 @@ void game_loop(GameState* gamestate)  {
             handle_pacman_event(&event, gamestate->pacman);
         }
     update_pacman(gamestate->pacman);
-    render(gamestate->render, gamestate->pacman);
+    update_ghost(gamestate->ghost, gamestate->pacman);
+    render(gamestate->render, gamestate->pacman, gamestate->ghost);
     }
     cleanup(gamestate->render, gamestate->pacman);
 }
@@ -54,5 +62,6 @@ void game_loop(GameState* gamestate)  {
 void free_memory(GameState* gamestate) {
     free(gamestate->render);
     free(gamestate->pacman);
+    free(gamestate->ghost);
     free(gamestate);
 }

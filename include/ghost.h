@@ -15,6 +15,7 @@ typedef struct {
 } Ghost;
 
 void initialize_ghost(Ghost* ghost, char* name);
+void random_move(Ghost* ghost);
 void update_ghost(Ghost* ghost, Pacman* pacman);
 
 #endif
