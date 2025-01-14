@@ -15,7 +15,8 @@ typedef struct {
 } Ghost;
 
 void initialize_ghost(Ghost* ghost, char* name);
-void random_move(Ghost* ghost);
+void shuffle(Direction* directions, int size);
+Direction get_idling_direction(Ghost* ghost);
 void update_ghost(Ghost* ghost, Pacman* pacman);
 
 #endif

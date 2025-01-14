@@ -26,53 +26,74 @@ void initialize_ghost(Ghost* ghost, char* name) {
     ghost->current_memory = 0;
 }
 
-void random_move(Ghost* ghost) {
-    bool done = false;
-    while (!done) {
-        ghost->dir = (Direction)(rand() % 4);
-        switch (ghost->dir) {
-            case UP:
-                if (ghost->y > 0 && !is_wall(maze[ghost->y - 1][ghost->x])) {
-                    ghost->dir = UP;
-                    ghost->y = ghost->y + 1;
-                    done = true;
-                }
-                break;
-            case DOWN:
-                if (ghost->y < ROWS - 1 && !is_wall(maze[ghost->y + 1][ghost->x])) {
-                    ghost->dir = DOWN;
-                    ghost->y = ghost->y - 1;
-                    done = true;
-                }
-                break;
-            case LEFT:
-                if (ghost->x > 0 && !is_wall(maze[ghost->y][ghost->x - 1])) {
-                    ghost->dir = LEFT;
-                    ghost->x = ghost->x - 1;
-                    done = true;
-                }
-                break;
-            case RIGHT:
-                if (ghost->x < COLS - 1 && !is_wall(maze[ghost->y][ghost->x + 1])) {
-                    ghost->dir = RIGHT;
-                    ghost->x = ghost->x + 1;
-                    done = true;
-                }
-                break;
-            default:
-                break;
-        }
+// shuffle a directions array
+void shuffle(Direction* directions, int size) {
+    for (int i = size - 1; i > 0; i--) {
+        int j = rand() % (i + 1);
+        Direction temp = directions[i];
+        directions[i] = directions[j];
+        directions[j] = temp;
     }
 }
 
+Direction get_idling_direction(Ghost* ghost) {
+    Direction valid_directions[4];
+    int count = 0;
+
+    if (!is_dir_colliding_to_wall(UP, ghost->x, ghost->y)) {
+        valid_directions[count++] = UP;
+    }
+    if (!is_dir_colliding_to_wall(DOWN, ghost->x, ghost->y)) {
+        valid_directions[count++] = DOWN;
+    }
+    if (!is_dir_colliding_to_wall(LEFT, ghost->x, ghost->y)) {
+        valid_directions[count++] = LEFT;
+    }
+    if (!is_dir_colliding_to_wall(RIGHT, ghost->x, ghost->y)) {
+        valid_directions[count++] = RIGHT;
+    }
+
+    shuffle(valid_directions, count);
+
+    return valid_directions[0];
+}
 
 void update_ghost(Ghost* ghost, Pacman* pacman) {
     // idling/roaming
-    if(ghost->current_memory == 0) {
-        random_move(ghost);
+    if (ghost->current_memory == 0) {
+        // we are idling toward a wall
+        if (!is_dir_colliding_to_wall(ghost->dir, ghost->x, ghost->y)) {
+            switch(ghost->dir) {
+                case UP:
+                    ghost->y -= 1;
+                    break;
+                case DOWN:
+                    ghost->y += 1;
+                    break;
+                case LEFT:
+                    if (ghost->x > 0 && maze[ghost->y][ghost->x - 1] != WARP) {
+                        ghost->x -= 1; 
+                    } else if (maze[ghost->y][ghost->x - 1] == WARP) {
+                        ghost->x = COLS - 1;
+                    }       
+                    break;
+                case RIGHT:
+                    if (ghost->x < COLS - 1 && maze[ghost->y][ghost->x + 1] != WARP) {
+                        ghost->x += 1;
+                    } else if (maze[ghost->y][ghost->x + 1] == WARP) {
+                        ghost->x = 0; 
+                    }
+                    break;  
+                default:
+                    break;
+            }
+        }
+        // we are at the wall, time to change direction
+        else {
+            ghost->dir = get_idling_direction(ghost);
+        }
     }
     // chasing
     else {
-        random_move(ghost);
     }
 }

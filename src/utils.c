@@ -19,3 +19,34 @@ CellType maze[ROWS][COLS] =
 bool is_wall(CellType cell) {
     return cell == MIDDLE_WALL || cell == OUTER_WALL || cell == CORNER || cell == JUNCTION;
 }
+
+// checking if the next logical coordinates lead to a wall
+bool is_dir_colliding_to_wall(Direction dir, int x, int y) {
+    bool res = true;
+    switch (dir) {
+        case UP:
+            if (y > 0 && !is_wall(maze[y - 1][x])) {
+                res = false;
+            }
+            break;
+        case DOWN:
+            if (y < ROWS - 1 && !is_wall(maze[y + 1][x])) {
+                res = false;
+            }
+            break;
+        case LEFT:
+            if (x > 0 && !is_wall(maze[y][x - 1])) {
+                res = false;
+            }
+            break;
+        case RIGHT:
+            if (x < COLS - 1 && !is_wall(maze[y][x + 1])) {
+                res = false;
+            }
+            break;
+        default:
+            break;
+    }
+
+    return res;
+}

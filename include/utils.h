@@ -49,5 +49,6 @@ typedef enum {
 extern CellType maze[ROWS][COLS];
 
 bool is_wall(CellType cell);
+bool is_dir_colliding_to_wall(Direction dir, int x, int y);
 
 #endif
