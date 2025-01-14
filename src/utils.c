@@ -50,3 +50,17 @@ bool is_dir_colliding_to_wall(Direction dir, int x, int y) {
 
     return res;
 }
+
+bool at_crossway(int x, int y) {
+    int paths = 0;
+    if (!is_dir_colliding_to_wall(UP, x, y)) { paths++;}
+    if (!is_dir_colliding_to_wall(DOWN, x, y)) { paths++;}
+    if (!is_dir_colliding_to_wall(LEFT, x, y)) { paths++;}
+    if (!is_dir_colliding_to_wall(RIGHT, x, y)) { paths++;}
+
+    if(paths >= 3) {
+        return true;
+    } else {
+        return false;
+    }  
+}

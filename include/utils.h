@@ -12,8 +12,8 @@
 #define PACMAN_X 10
 #define PACMAN_Y 3
 
-#define BLINKY_X 10
-#define BLINKY_Y 3
+#define BLINKY_X 11
+#define BLINKY_Y 5
 
 #define PINKY_X 10
 #define PINKY_Y 3
@@ -49,6 +49,7 @@ typedef enum {
 extern CellType maze[ROWS][COLS];
 
 bool is_wall(CellType cell);
-bool is_dir_colliding_to_wall(Direction dir, int x, int y);
+bool is_dir_colliding_to_wall(Direction dir, int x, int y); // checking if the next move toward the Direction dir leads to a wall
+bool at_crossway(int x, int y); // 3 or more directions available at x,y
 
 #endif

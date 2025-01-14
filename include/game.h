@@ -8,7 +8,7 @@
 
 typedef struct {
     Pacman* pacman;
-    Ghost* ghost;
+    Ghost* ghosts[1];
     bool is_game_over;
     RenderState* render; // in charge of rendering the game
 } GameState;
